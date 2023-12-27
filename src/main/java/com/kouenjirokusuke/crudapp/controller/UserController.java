@@ -1,23 +1,54 @@
 package com.kouenjirokusuke.crudapp.controller;
 
-import com.kouenjirokusuke.crudapp.dao.UserDAO;
+import com.kouenjirokusuke.crudapp.entity.User;
+import com.kouenjirokusuke.crudapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    private UserDAO userDAO;
+    private UserService userService;
 
     @RequestMapping("/")
     public String showAllUsers(Model model) {
-        System.out.println("CONTROLLER IS WORK");
-        model.addAttribute("users", userDAO.getAllUsers());
+        model.addAttribute("users", userService.getAllUsers());
 
         return "users";
+    }
+
+    @RequestMapping("/add")
+    public String addNewUser(Model model) {
+        User user = new User();
+        model.addAttribute("user", user);
+
+        return "user-info";
+    }
+
+    @RequestMapping("/save")
+    public String saveUser(@ModelAttribute("user") User user) {
+        userService.saveUser(user);
+
+        return "redirect:/users/";
+    }
+
+    @RequestMapping("/updateInfo")
+    public String updateUser (@RequestParam("userId") long id, Model model) {
+        model.addAttribute("user", userService.getUser(id));
+
+        return "user-info";
+    }
+    @RequestMapping("/deleteUser")
+    public String deleteUser (@RequestParam("userId") long id) {
+        userService.deleteUser(id);
+
+        return "redirect:/users/";
     }
 
 }
