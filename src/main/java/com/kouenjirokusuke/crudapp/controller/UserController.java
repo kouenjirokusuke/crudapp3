@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/users")
 public class UserController {
 
     @Autowired
@@ -25,8 +24,7 @@ public class UserController {
 
     @RequestMapping("/add")
     public String addNewUser(Model model) {
-        User user = new User();
-        model.addAttribute("user", user);
+        model.addAttribute("user", new User());
 
         return "user-info";
     }
@@ -35,7 +33,7 @@ public class UserController {
     public String saveUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
 
-        return "redirect:/users/";
+        return "redirect:/";
     }
 
     @RequestMapping("/updateInfo")
@@ -48,7 +46,7 @@ public class UserController {
     public String deleteUser (@RequestParam("userId") long id) {
         userService.deleteUser(id);
 
-        return "redirect:/users/";
+        return "redirect:/";
     }
 
 }
